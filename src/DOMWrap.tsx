@@ -244,7 +244,7 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
     const width = getWidth(ul);
 
     this.overflowedItems = [];
-    let currentSumWidth = 0;
+    //let currentSumWidth = 0;
 
     // index for last visible child in horizontal mode
     let lastVisibleIndex: number;
@@ -252,15 +252,15 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
     // float number comparison could be problematic
     // e.g. 0.1 + 0.2 > 0.3 =====> true
     // thus using FLOAT_PRECISION_ADJUST as buffer to help the situation
-    if (this.originalTotalWidth > width + FLOAT_PRECISION_ADJUST) {
-      lastVisibleIndex = -1;
+    if (this.originalTotalWidth > (width - 20)) {
+      lastVisibleIndex = 1;
 
-      this.menuItemSizes.forEach(liWidth => {
-        currentSumWidth += liWidth;
-        if (currentSumWidth + this.overflowedIndicatorWidth <= width) {
-          lastVisibleIndex += 1;
-        }
-      });
+      // this.menuItemSizes.forEach(liWidth => {
+      //   currentSumWidth += liWidth;
+      //   if (currentSumWidth + this.overflowedIndicatorWidth <= width) {
+      //     lastVisibleIndex += 1;
+      //   }
+      // });
     }
 
     this.setState({ lastVisibleIndex });
@@ -282,27 +282,24 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
             [],
           );
           if (
-            lastVisibleIndex !== undefined &&
-            this.props.className.indexOf(`${this.props.prefixCls}-root`) !== -1
+            lastVisibleIndex !== undefined
           ) {
-            if (index > lastVisibleIndex) {
-              item = React.cloneElement(
-                childNode,
-                // 这里修改 eventKey 是为了防止隐藏状态下还会触发 openkeys 事件
-                {
-                  style: { display: 'none' },
-                  eventKey: `${childNode.props.eventKey}-hidden`,
-                  /**
-                   * Legacy code. Here `className` never used:
-                   * https://github.com/react-component/menu/commit/4cd6b49fce9d116726f4ea00dda85325d6f26500#diff-e2fa48f75c2dd2318295cde428556a76R240
-                   */
-                  className: `${MENUITEM_OVERFLOWED_CLASSNAME}`,
-                },
-              );
-            }
+            item = React.cloneElement(
+              childNode,
+              // 这里修改 eventKey 是为了防止隐藏状态下还会触发 openkeys 事件
+              {
+                style: { display: 'none' },
+                eventKey: `${childNode.props.eventKey}-hidden`,
+                /**
+                 * Legacy code. Here `className` never used:
+                 * https://github.com/react-component/menu/commit/4cd6b49fce9d116726f4ea00dda85325d6f26500#diff-e2fa48f75c2dd2318295cde428556a76R240
+                 */
+                className: `${MENUITEM_OVERFLOWED_CLASSNAME}`,
+              },
+            );
+            
             if (index === lastVisibleIndex + 1) {
               this.overflowedItems = children
-                .slice(lastVisibleIndex + 1)
                 .map(c =>
                   React.cloneElement(
                     c,
