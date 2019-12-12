@@ -152,7 +152,7 @@ class Menu extends React.Component<MenuProps> {
     let changed = false;
     const processSingle = e => {
       let oneChanged = false;
-      if (e.open) {
+      if (e.open && e.item.props.children) {
         oneChanged = openKeys.indexOf(e.key) === -1;
         if (oneChanged) {
           openKeys.push(e.key);
