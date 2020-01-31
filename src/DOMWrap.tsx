@@ -6,7 +6,7 @@ import { getWidth, setStyle, menuAllProps } from './util';
 import { MenuMode } from './interface';
 
 const MENUITEM_OVERFLOWED_CLASSNAME = 'menuitem-overflowed';
-const FLOAT_PRECISION_ADJUST = 0.5;
+// const FLOAT_PRECISION_ADJUST = 0.5;
 
 interface DOMWrapProps {
   className?: string;
@@ -244,7 +244,7 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
     const width = getWidth(ul);
 
     this.overflowedItems = [];
-    //let currentSumWidth = 0;
+    // let currentSumWidth = 0;
 
     // index for last visible child in horizontal mode
     let lastVisibleIndex: number;
@@ -252,7 +252,7 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
     // float number comparison could be problematic
     // e.g. 0.1 + 0.2 > 0.3 =====> true
     // thus using FLOAT_PRECISION_ADJUST as buffer to help the situation
-    if (this.originalTotalWidth > (width - 20)) {
+    if (this.originalTotalWidth > width - 20) {
       lastVisibleIndex = 1;
 
       // this.menuItemSizes.forEach(liWidth => {
@@ -281,9 +281,7 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
             childNode.props.eventKey,
             [],
           );
-          if (
-            lastVisibleIndex !== undefined
-          ) {
+          if (lastVisibleIndex !== undefined) {
             item = React.cloneElement(
               childNode,
               // 这里修改 eventKey 是为了防止隐藏状态下还会触发 openkeys 事件
@@ -297,17 +295,16 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
                 className: `${MENUITEM_OVERFLOWED_CLASSNAME}`,
               },
             );
-            
+
             if (index === lastVisibleIndex + 1) {
-              this.overflowedItems = children
-                .map(c =>
-                  React.cloneElement(
-                    c,
-                    // children[index].key will become '.$key' in clone by default,
-                    // we have to overwrite with the correct key explicitly
-                    { key: c.props.eventKey, mode: 'vertical-left' },
-                  ),
-                );
+              this.overflowedItems = children.map(c =>
+                React.cloneElement(
+                  c,
+                  // children[index].key will become '.$key' in clone by default,
+                  // we have to overwrite with the correct key explicitly
+                  { key: c.props.eventKey, mode: 'vertical-left' },
+                ),
+              );
 
               overflowed = this.getOverflowedSubMenuItem(
                 childNode.props.eventKey,
@@ -346,8 +343,8 @@ class DOMWrap extends React.Component<DOMWrapProps, DOMWrapState> {
     } = this.props;
 
     const Tag = tag as any;
-
-    return <Tag {...rest}>{this.renderChildren(children)}</Tag>;
+    const renderedChildren = this.renderChildren(children);
+    return <Tag {...rest}>{renderedChildren}</Tag>;
   }
 }
 
